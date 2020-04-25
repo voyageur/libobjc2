@@ -287,7 +287,7 @@ if (ENABLE_OBJCXX)
 		test_cxx(cxxrt false 1)
 
 		if (CXX_RUNTIME)
-			# libcxxrt was usable, correct our assessment to be use GNU ABI
+			# libcxxrt was usable, correct our assessment to use GNU ABI
 			set(CXX_ABI_IS_GNU 1)
 		else ()
 			# If it doesn't, then look for GNU libsupc++.so instead (either works,
@@ -302,7 +302,7 @@ if (ENABLE_OBJCXX)
 		if (NOT CXX_RUNTIME)
 			test_cxx(c++abi false 0)
 			if (CXX_RUNTIME)
-				# working libc++abi means the LLVM ABI, needs to be used
+				# working libc++abi means the LLVM ABI needs to be used
 				set(CXX_ABI_IS_GNU 0)
 			endif ()
 		endif (NOT CXX_RUNTIME)
