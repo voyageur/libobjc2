@@ -17,7 +17,7 @@ namespace std
 	 *
 	 * NOTE: libc++ assumes that type_info instances are always layed out by the compiler,
 	 * which is not true for libobjc2, where we allocate a static type_info class for
-	 * `id' exception handlers. For this reasons, the definition has been modified so
+	 * `id' exception handlers. For this reason, the definition has been modified so
 	 * that this is possible, while still allowing vtables to match up correctly.
 	 */
 	class type_info
