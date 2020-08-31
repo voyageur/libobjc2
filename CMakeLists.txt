@@ -331,7 +331,7 @@ if (ENABLE_OBJCXX)
 			try_compile(USERUNTIME 
 				"${CMAKE_BINARY_DIR}/CMake"
 				"${CMAKE_CURRENT_LIST_DIR}/CMake"
-				test_cxx_stdlib)
+				test_cxx_stdlib
 				CMAKE_FLAGS "-DCXX_ABI_IS_GNU=${CXX_ABI_IS_GNU}"
 			)
 			if (${USERUNTIME})

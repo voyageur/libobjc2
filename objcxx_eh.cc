@@ -16,6 +16,7 @@ int eh_trampoline();
 
 uint64_t cxx_exception_class;
 
+
 extern "C" void *__cxa_allocate_exception(size_t) noexcept;
 
 /**
@@ -288,7 +289,7 @@ namespace gnustep
 			                        void **obj,
 			                        unsigned outer) const;
 #if CXX_ABI_IS_GNU != 1
-			virtual bool can_catch(const CXX_TYPE_INFO_CLASS *thrownType,
+			virtual bool can_catch(const type_info *thrownType,
 			                       void *&obj) const;
 #endif
 		};
@@ -303,11 +304,18 @@ namespace gnustep
 			                        void **obj,
 			                        unsigned outer) const;
 #if CXX_ABI_IS_GNU != 1
-			virtual bool can_catch(const CXX_TYPE_INFO_CLASS *thrownType,
+			virtual bool can_catch(const type_info *thrownType,
 			                       void *&obj) const;
 #endif
 		};
 	}
+
+	static inline id adjust_thrown_object_pointer(void** obj) {
+		 if (cxx_exception_class == llvm_cxx_exception_class) {
+			 return **(id**)obj;
+		 }
+		 return *(id*)obj;
+	 }
 };
 
 
@@ -332,7 +340,7 @@ bool gnustep::libobjc::__objc_class_type_info::__do_catch(const type_info *throw
 	    || (AppleCompatibleMode && 
 	        dynamic_cast<const __objc_class_type_info*>(thrownType)))
 	{
-		thrown = *(id*)obj;
+		thrown = adjust_thrown_object_pointer(obj);
 		// nil only matches id catch handlers in Apple-compatible mode, or when thrown as an id
 		if (0 == thrown)
 		{
@@ -344,7 +352,8 @@ bool gnustep::libobjc::__objc_class_type_info::__do_catch(const type_info *throw
 	}
 	else if (dynamic_cast<const __objc_class_type_info*>(thrownType))
 	{
-		thrown = *(id*)obj;
+		
+		thrown = adjust_thrown_object_pointer(obj);
 		found = isKindOfClass((Class)objc_getClass(thrownType->name()),
 		                      (Class)objc_getClass(name()));
 	}
@@ -356,7 +365,7 @@ bool gnustep::libobjc::__objc_class_type_info::__do_catch(const type_info *throw
 };
 
 #if CXX_ABI_IS_GNU != 1
-bool gnustep::libobjc::__objc_class_type_info::can_catch(const CXX_TYPE_INFO_CLASS *thrownType,
+bool gnustep::libobjc::__objc_class_type_info::can_catch(const type_info *thrownType,
                                                           void *&obj) const
 {
 	return __do_catch(thrownType, &obj, 0);
@@ -382,7 +391,7 @@ bool gnustep::libobjc::__objc_id_type_info::__do_catch(const type_info *thrownTy
 };
 
 #if CXX_ABI_IS_GNU != 1
-bool gnustep::libobjc::__objc_id_type_info::can_catch(const CXX_TYPE_INFO_CLASS *thrownType,
+bool gnustep::libobjc::__objc_id_type_info::can_catch(const type_info *thrownType,
                                                           void *&obj) const
 {
 	return __do_catch(thrownType, &obj, 0);
