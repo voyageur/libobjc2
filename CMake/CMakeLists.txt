@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 project(test_cxx_runtime)
 
 add_executable(test_cxx_runtime typeinfo_test.cc)
+add_executable(test_cxx_stdlib typeinfo_test.cc)
 set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
 if (CXX_ABI_IS_GNU)
 	add_definitions(-DCXX_ABI_IS_GNU=1)
